@@ -335,6 +335,26 @@ def refuse_unignored_secret_file(path: Path) -> None:
         )
 
 
+import time
+
+
+def _atomic_replace(src: str | Path, dst: str | Path) -> None:
+    """Replace src with dst, absorbing transient Windows file locks."""
+    src = str(src)
+    dst = str(dst)
+    if sys.platform == "win32":
+        for attempt in range(5):
+            try:
+                os.replace(src, dst)
+                return
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.05)
+    else:
+        os.replace(src, dst)
+
+
 def write_file(path: Path, text: str, *, secret: bool) -> list[str]:
     """Write atomically. A symlinked config is written through to its target. A new file is 0600; an
     existing one keeps its mode unless it now holds a secret and is readable by others, which is
@@ -345,15 +365,16 @@ def write_file(path: Path, text: str, *, secret: bool) -> list[str]:
     mode = 0o600
     if path.exists():
         mode = path.stat().st_mode & 0o777
-        if secret and mode & 0o077:
+        if secret and sys.platform != "win32" and mode & 0o077:
             notes.append(f"{path} was mode {mode:o}; set to 600 because it now holds the token")
             mode = 0o600
     fd, tmp = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.")
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as fh:
             fh.write(text)
-        os.chmod(tmp, mode)
-        os.replace(tmp, path)
+        if sys.platform != "win32":
+            os.chmod(tmp, mode)
+        _atomic_replace(tmp, path)
     except BaseException:
         Path(tmp).unlink(missing_ok=True)
         raise

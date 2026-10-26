@@ -1,6 +1,7 @@
 """req.r3-mcp-clients.connect: each recipe's output, merge and idempotency, no token by default."""
 import json
 import stat
+import sys
 import tomllib
 
 import pytest
@@ -83,7 +84,8 @@ def test_write_defaults_to_a_token_reference_in_a_0600_file(client, instance, tm
     assert code == 0, err
     assert TOKEN not in out and TOKEN not in target.read_text()
     assert "Bearer ${OKG_CHAT_MCP_TOKEN}" in target.read_text()
-    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    if sys.platform != "win32":
+        assert stat.S_IMODE(target.stat().st_mode) == 0o600
     check_golden(f"write-{client}.json", target.read_text())
 
 
@@ -94,7 +96,8 @@ def test_embed_token_writes_the_literal_token_outside_a_repository(client, insta
                              "--embed-token")
     assert code == 0, err
     assert f"Bearer {TOKEN}" in target.read_text() and TOKEN not in out
-    assert stat.S_IMODE(target.stat().st_mode) == 0o600
+    if sys.platform != "win32":
+        assert stat.S_IMODE(target.stat().st_mode) == 0o600
 
 
 def _repo(path):
@@ -128,7 +131,10 @@ def test_a_symlinked_config_is_written_through_not_replaced(instance, tmp_path, 
     real.parent.mkdir()
     real.write_text(json.dumps({"mcpServers": {"other": {"command": "x"}}}))
     link = tmp_path / ".mcp.json"
-    link.symlink_to(real)
+    try:
+        link.symlink_to(real)
+    except OSError:
+        pytest.skip("Symlink creation requires elevated privileges on Windows")
     code, _, err = run_cli(capsys, "claude-code", "--instance", str(instance.dir), "--write", str(link))
     assert code == 0, err
     assert link.is_symlink() and link.resolve() == real.resolve()
@@ -200,7 +206,8 @@ def test_merge_keeps_other_entries_and_is_idempotent(client, instance, tmp_path,
         assert set(doc["mcp_servers"]) == {"other", "archi-demo", "notes"}
     else:
         assert TOKEN not in first  # a reference; the file's own mode (0644) is not touched
-        assert stat.S_IMODE(target.stat().st_mode) == 0o644
+        if sys.platform != "win32":
+            assert stat.S_IMODE(target.stat().st_mode) == 0o644
     code, out, _ = run_cli(capsys, *args)
     assert code == 0 and out.startswith("unchanged:")
     assert target.read_text() == first

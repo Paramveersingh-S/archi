@@ -10,6 +10,8 @@ key.py
 *.swp
 __pycache__
 venv
+.venv/
+*.whl
 *.DS_Store
 *.egg-info
 *sqlite_db

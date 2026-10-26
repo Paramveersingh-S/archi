@@ -164,7 +164,8 @@ def _save_service_cookies(
             jar.set_cookie(cookie)
 
     jar.save(ignore_discard=True, ignore_expires=True)
-    cookie_file.chmod(0o600)
+    if sys.platform != "win32":
+        cookie_file.chmod(0o600)
 
     svc_count = sum(1 for c in jar if c.domain.endswith(service_domain))
     return len(jar), svc_count
