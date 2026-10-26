@@ -1,0 +1,23 @@
+name: tickets
+kind: context
+version: 0.1.0
+description: Generic ticket queue and issue tracking over JIRA and Redmine connectors.
+requires:
+  modules: [document_starter, person, extraction]
+schemas: schemas/
+sources: sources/
+invariants: invariants.yaml
+# Tickets are what operators triage today; the downloader cache may be a day
+# old and no more.
+freshness:
+  tickets.tickets: {max_staleness: 24h}
+# Link-coverage targets (ADR 0002 section 6.1): each becomes the warn-level
+# invariant tickets_link_<name>.
+link_coverage:
+  # Every ticket has a reporter.
+  - {name: ticket_reporter, from: jira_issue, edge: reported_by, to: person, direction: out, min_fraction: 0.8}
+search_subtypes: [jira_issue, document_chunk]
+prompt_fragment: prompt.md
+credentials: [CERN_JIRA_TOKEN]
+# Reads cached ticket queues; tokens widen visibility to private projects.
+needs_credentials: false

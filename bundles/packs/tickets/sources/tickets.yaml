@@ -1,0 +1,49 @@
+# Generic tickets connector template reading cached ticket queues.
+tickets:
+  module: archi.sources.jira
+  class: JiraIssueAdapter
+  ownership_id: ${deployment_name}.tickets
+  admission_policy:
+    producer_id: ${deployment_name}.tickets
+    producer_kind: source
+    trust_label: implicit_legacy_trusted
+    admission_mode: fast_track
+    authority_scope:
+      source_family: tickets
+      source_name: tickets
+    output_signature:
+      nodes:
+        - {subtype: jira_issue}
+        - {subtype: person}
+        - {subtype: document_chunk}
+      edges:
+        - {src_subtype: jira_issue, edge_type: assigned_to, dst_subtype: person}
+        - {src_subtype: jira_issue, edge_type: reported_by, dst_subtype: person}
+        - {src_subtype: jira_issue, edge_type: contains, dst_subtype: document_chunk}
+        - {src_subtype: document_chunk, edge_type: references, dst_subtype: jira_issue}
+    output_scope_summary:
+      summary: Ticket issues, participants, and text chunks from the records cache
+      nodes: [jira_issue, person, document_chunk]
+      edges:
+        - jira_issue assigned_to person
+        - jira_issue reported_by person
+        - jira_issue contains document_chunk
+        - document_chunk references jira_issue
+  source_class: mutable_api
+  record_identity_kind: remote_id
+  record_identity_fields: [issue_key]
+  source_revision_kind: updated_at
+  deletion_semantics: missing_from_completed_scope
+  publication_mode: published_generation
+  credential_refs: [CERN_JIRA_TOKEN]
+  credential_aliases:
+    CERN_JIRA_TOKEN: [JIRA_CERN_TOKEN]
+  required_for_baseline: true
+  params:
+    records_path: ${archi_data_root}/tickets/records.json
+    meta_path: ${archi_data_root}/tickets/meta.json
+    base_url: https://its.cern.ch/jira
+  sync:
+    triggers: [manual, reconcile]
+    default_event_mode: scope_complete
+    reconcile_mode: scope_complete
