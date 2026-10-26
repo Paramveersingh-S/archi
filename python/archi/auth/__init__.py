@@ -26,16 +26,22 @@ from archi.auth.cookies import (
     looks_like_login_url,
     sso_cookie_acquisition_command,
 )
+from archi.auth.http import (
+    TimeoutHTTPAdapter,
+    create_resilient_session,
+)
 from archi.auth.preflight import CERNPreflightSource
 
 __all__ = [
     "CERNPreflightSource",
     "CookieFileStatus",
     "DATA_ROOT_ENV",
+    "TimeoutHTTPAdapter",
     "cache_or_forced_live_change_probe",
     "check_cookie_file",
     "content_hash",
     "content_hash_change_probe",
+    "create_resilient_session",
     "data_root",
     "load_cookie_jar",
     "load_cookie_jar_from_env",
