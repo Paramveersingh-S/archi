@@ -1,0 +1,10 @@
+{"id": "cms-physics-01", "question": "Which analysis note backs a given CMS physics analysis summary?", "expected_sources": ["cds", "analysis-notes"], "expected_entities": ["PAS", "analysis note", "CMS"]}
+{"id": "cms-physics-02", "question": "Which analyses use b tagging, and what do the TWiki recipes say about it?", "expected_sources": ["twiki", "cms-analyses"], "expected_entities": ["b tagging", "BTV", "TWiki"]}
+{"id": "cms-physics-03", "question": "What does the Muon POG documentation cover?", "expected_sources": ["twiki"], "expected_entities": ["Muon", "POG", "efficiency"]}
+{"id": "cms-physics-04", "question": "What are the recommended CMSSW release cycles for Run 3 data analysis?", "expected_sources": ["cmssw-releases"], "expected_entities": ["CMSSW", "release", "Run 3"]}
+{"id": "cms-physics-05", "question": "Which Higgs analysis papers link back to note HIG-19-001?", "expected_sources": ["cds", "cms-analyses"], "expected_entities": ["HIG-19-001", "Higgs", "PAS"]}
+{"id": "cms-physics-06", "question": "Where can the jet energy resolution and corrections recipes be found?", "expected_sources": ["twiki"], "expected_entities": ["JEC", "JER", "JetMET"]}
+{"id": "cms-physics-07", "question": "What are the primary generator cross section definitions recorded for top quark analyses?", "expected_sources": ["twiki", "analysis-notes"], "expected_entities": ["top quark", "cross section", "generator"]}
+{"id": "cms-physics-08", "question": "How are luminosity calibrations and uncertainties cited in Run 2 legacy results?", "expected_sources": ["cds", "twiki"], "expected_entities": ["luminosity", "uncertainty", "calibration"]}
+{"id": "cms-physics-09", "question": "What analysis groups are actively maintaining tau identification algorithms?", "expected_sources": ["twiki", "cms-analyses"], "expected_entities": ["tau", "identification", "POG"]}
+{"id": "cms-physics-10", "question": "Which CMSSW release introduced the latest nanoAOD data tier format?", "expected_sources": ["cmssw-releases", "analysis-notes"], "expected_entities": ["nanoAOD", "CMSSW", "data tier"]}

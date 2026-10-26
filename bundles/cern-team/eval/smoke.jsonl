@@ -1,0 +1,10 @@
+{"id": "cern-team-01", "question": "What does the documentation say about getting started?", "expected_sources": ["docsite"], "expected_entities": ["documentation", "setup", "getting started"]}
+{"id": "cern-team-02", "question": "Which meetings are in the graph, and what were they about?", "expected_sources": ["indico"], "expected_entities": ["meeting", "agenda"]}
+{"id": "cern-team-03", "question": "What repositories are indexed here, and what is in them?", "expected_sources": ["docsite", "git-code"], "expected_entities": ["repository", "code"]}
+{"id": "cern-team-04", "question": "How do team members acquire Kerberos and SSO tokens for protected resources?", "expected_sources": ["docsite", "core-playbooks"], "expected_entities": ["kinit", "SSO", "token"]}
+{"id": "cern-team-05", "question": "What playbooks are available for incident response and cluster maintenance?", "expected_sources": ["core-playbooks"], "expected_entities": ["playbook", "incident", "maintenance"]}
+{"id": "cern-team-06", "question": "Where are the team architecture design records and decision logs documented?", "expected_sources": ["docsite"], "expected_entities": ["ADR", "architecture", "decision"]}
+{"id": "cern-team-07", "question": "What are the common procedures for managing service credentials?", "expected_sources": ["core-playbooks", "docsite"], "expected_entities": ["credentials", "secret", "env"]}
+{"id": "cern-team-08", "question": "Which collaboration channels and ticket queues are tracked for operations?", "expected_sources": ["core-playbooks"], "expected_entities": ["operations", "tickets", "support"]}
+{"id": "cern-team-09", "question": "How are continuous integration pipelines configured for bundle tests?", "expected_sources": ["docsite"], "expected_entities": ["CI", "workflow", "test"]}
+{"id": "cern-team-10", "question": "What are the deployment guidelines for publishing a new instance?", "expected_sources": ["docsite", "core-playbooks"], "expected_entities": ["deployment", "publish", "instance"]}
